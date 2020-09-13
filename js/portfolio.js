@@ -1,5 +1,6 @@
 $(async function() {
     prepare_data();
+    prepare_page();
     addMenu();
     update_trades();
     main();
@@ -24,49 +25,72 @@ function update_trades() {
     }
 }
 
-document.getElementById("Refresh").onclick = async function () {
-    let button = document.getElementById("Refresh");
-    button.setAttribute("disabled", "disabled");
-    main();
-    button.removeAttribute("disabled");
-}
+function prepare_page() {
+    document.getElementById("body").innerHTML = 
+    `
+    <div id="menu">
+    </div>
+    <div class="block" id="portfolio_table">
+        <h2>Portfolio</h2>
+        <table id="portfolio"></table>
+        <div id="total-value"></div>
+        <button id="Refresh">Refresh</button>
+    </div>
+    <div class="block" id="list_table">
+        <table id="list"></table>
+        <button id="list_Refresh">Refresh</button><br><br>
+    </div>
+    <div>
+        <button id="Ren">Ren</button><button id="sushi">sushi</button><br><br>
+    </div>
+    <textarea id="textarea" cols="50" rows="5">
+        </textarea>` + document.getElementById("body").innerHTML;
+        
 
-document.getElementById("sushi").onclick = async function () {
-    let button = document.getElementById("sushi");
-    button.setAttribute("disabled", "disabled");
-    const App = await init_ethers();    
-    let sushi_susd_poll_add = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd"
-    let LP_token_add = "0xf80758ab42c3b07da84053fd88804bcb6baa4b5c"
-    const sushi_susd_poll_contract = new ethers.Contract(LP_token_add, ERC20_ABI, App.provider);
-    let total_lp = await sushi_susd_poll_contract.balanceOf(sushi_susd_poll_add) / 1e18;
-    let sushi_contract = new ethers.Contract(sushi_susd_poll_add, sushi_abi, App.provider);
-    let my_lp = 2015;
-    let pendingsushi = await sushi_contract.pendingSushi(3, "0x102e99D7aD45ED83484Dc986CD1c78648BD79850") / 1e18;
-    pendingsushi += await sushi_contract.pendingSushi(13, "0x102e99D7aD45ED83484Dc986CD1c78648BD79850") / 1e18;
-    document.getElementById("textarea").value = 
-`Total LP: ${total_lp.toFixed(2)},  My: ${my_lp},  Percent: ${(my_lp / total_lp.toFixed(2))}
-PendingSushi: ${pendingsushi.toFixed(2)}
-`;
-    button.removeAttribute("disabled");
-}
+    document.getElementById("Refresh").onclick = async function () {
+        let button = document.getElementById("Refresh");
+        button.setAttribute("disabled", "disabled");
+        main();
+        button.removeAttribute("disabled");
+    }
 
-document.getElementById("Ren").onclick = async function () {
-    let button = document.getElementById("Ren");
-    button.setAttribute("disabled", "disabled");
-    const App = await init_ethers();
-    const RENBTC_CONTRACT = new ethers.Contract(RENBTC_TOKEN_ADDR, ERC20_ABI, App.provider);
-    let renBtc = await RENBTC_CONTRACT.totalSupply() / 1e8;
-    const WBTC_CONTRACT = new ethers.Contract(WBTC_TOKEN_ADDR, ERC20_ABI, App.provider);
-    let wBtc = await WBTC_CONTRACT.totalSupply() / 1e8;
-    document.getElementById("textarea").value = `${renBtc.toFixed(2)}\n${wBtc.toFixed(2)}\n${renBtc / wBtc}`;
-    button.removeAttribute("disabled");
-}
+    document.getElementById("sushi").onclick = async function () {
+        let button = document.getElementById("sushi");
+        button.setAttribute("disabled", "disabled");
+        const App = await init_ethers();    
+        let sushi_susd_poll_add = "0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd"
+        let LP_token_add = "0xf80758ab42c3b07da84053fd88804bcb6baa4b5c"
+        const sushi_susd_poll_contract = new ethers.Contract(LP_token_add, ERC20_ABI, App.provider);
+        let total_lp = await sushi_susd_poll_contract.balanceOf(sushi_susd_poll_add) / 1e18;
+        let sushi_contract = new ethers.Contract(sushi_susd_poll_add, sushi_abi, App.provider);
+        let my_lp = 2015;
+        let pendingsushi = await sushi_contract.pendingSushi(3, "0x102e99D7aD45ED83484Dc986CD1c78648BD79850") / 1e18;
+        pendingsushi += await sushi_contract.pendingSushi(13, "0x102e99D7aD45ED83484Dc986CD1c78648BD79850") / 1e18;
+        document.getElementById("textarea").value = 
+    `Total LP: ${total_lp.toFixed(2)},  My: ${my_lp},  Percent: ${(my_lp / total_lp.toFixed(2))}
+    PendingSushi: ${pendingsushi.toFixed(2)}
+    `;
+        button.removeAttribute("disabled");
+    }
 
-document.getElementById("list_Refresh").onclick = async function () {
-    let button = document.getElementById("list_Refresh");
-    button.setAttribute("disabled", "disabled");
-    flash_list_coins();
-    button.removeAttribute("disabled");
+    document.getElementById("Ren").onclick = async function () {
+        let button = document.getElementById("Ren");
+        button.setAttribute("disabled", "disabled");
+        const App = await init_ethers();
+        const RENBTC_CONTRACT = new ethers.Contract(RENBTC_TOKEN_ADDR, ERC20_ABI, App.provider);
+        let renBtc = await RENBTC_CONTRACT.totalSupply() / 1e8;
+        const WBTC_CONTRACT = new ethers.Contract(WBTC_TOKEN_ADDR, ERC20_ABI, App.provider);
+        let wBtc = await WBTC_CONTRACT.totalSupply() / 1e8;
+        document.getElementById("textarea").value = `${renBtc.toFixed(2)}\n${wBtc.toFixed(2)}\n${renBtc / wBtc}`;
+        button.removeAttribute("disabled");
+    }
+
+    document.getElementById("list_Refresh").onclick = async function () {
+        let button = document.getElementById("list_Refresh");
+        button.setAttribute("disabled", "disabled");
+        flash_list_coins();
+        button.removeAttribute("disabled");
+    }
 }
 
 async function main() {

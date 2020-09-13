@@ -101,8 +101,8 @@ const _print = function(message) {
 const addMenu = function() {
     document.getElementById('menu').innerHTML = `
     <a href="../">Home</a> | 
-    <a href="../Board/">Board</a>
-    <a href="../Portfolio/">Portfolio</a>
+    <a href="../[repo]/Board/">Board</a>
+    <a href="../[repo]/Portfolio/">Portfolio</a>
     `;
 };
 
@@ -167,7 +167,7 @@ const get_synth_weekly_rewards = async function(synth_contract_instance) {
 
 function prepare_data() {
     if (typeof trades === 'undefined') {
-        var person = prompt("Please enter your name", "Harry Potter");
+        var person = prompt("What do you want to see: ", "Harry Potter");
         var bytes  = CryptoJS.AES.decrypt(encrypted_datas, person);
         var new_datas = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         console.log(new_datas)

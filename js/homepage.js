@@ -1,4 +1,5 @@
 $(async function() {
+    prepare_data();
     addMenu();
     consoleInit();
     start(main);

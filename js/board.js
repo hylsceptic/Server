@@ -1,8 +1,35 @@
 $(async function() {
+    prepare_data();
+    prepare_page();
     addMenu();
     consoleInit();
     start(main);
 });
+
+
+
+function prepare_page() {
+    document.getElementById("body").innerHTML = 
+    `
+    <pre id="log">
+    </pre>
+    <button id="Refresh">Refresh</button><br><br>
+    <div>
+        <h3>Add Transaction:</h3>
+        <form>
+            <label >Sell:</label><br>
+            <input type="text" id="sell_coin" name="fname"><br>
+            <label >Amount:</label><br>
+            <input type="text" id="sell_amount" name="lname"><br>
+            <label >Buy:</label><br>
+            <input type="text" id="buy_coin" name="fname"><br>
+            <label >Amount:</label><br>
+            <input type="text" id="buy_amount" name="lname"><br>
+        </form><br>
+        <button id="Add">Add</button><br>
+    </div>` + document.getElementById("body").innerHTML;
+        
+}
 
 
 async function main() {
